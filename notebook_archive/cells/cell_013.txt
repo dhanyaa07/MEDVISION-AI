@@ -1,0 +1,27 @@
+﻿def collect_images(directory):
+    paths = []
+    labels = []
+
+    for label, class_name in enumerate(CLASS_NAMES):
+        class_dir = os.path.join(directory, class_name)
+
+        for file in os.listdir(class_dir):
+            if file.lower().endswith((".jpg", ".jpeg", ".png")):
+                paths.append(os.path.join(class_dir, file))
+                labels.append(label)
+
+    return pd.DataFrame({"image": paths, "label": labels})
+
+train_df = collect_images(TRAIN_DIR)
+test_df = collect_images(TEST_DIR)
+
+train_df, val_df = train_test_split(
+    train_df,
+    test_size=0.20,
+    random_state=SEED,
+    stratify=train_df["label"]
+)
+
+print("Training:", len(train_df))
+print("Validation:", len(val_df))
+print("Testing:", len(test_df))
