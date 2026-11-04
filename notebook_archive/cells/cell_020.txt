@@ -1,0 +1,31 @@
+﻿from tensorflow.keras.callbacks import (
+    EarlyStopping,
+    ModelCheckpoint,
+    ReduceLROnPlateau
+)
+
+os.makedirs("/content/medvision_models", exist_ok=True)
+
+callbacks = [
+    ModelCheckpoint(
+        "/content/medvision_models/best_model.keras",
+        monitor="val_loss",
+        save_best_only=True,
+        verbose=1
+    ),
+
+    EarlyStopping(
+        monitor="val_loss",
+        patience=5,
+        restore_best_weights=True,
+        verbose=1
+    ),
+
+    ReduceLROnPlateau(
+        monitor="val_loss",
+        factor=0.2,
+        patience=2,
+        min_lr=1e-7,
+        verbose=1
+    )
+]
