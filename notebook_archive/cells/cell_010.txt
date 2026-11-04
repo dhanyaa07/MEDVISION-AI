@@ -1,0 +1,9 @@
+﻿from collections import Counter
+
+extensions = ('.jpg', '.jpeg', '.png', '.bmp')
+
+for root, dirs, files in os.walk(EXTRACT_PATH):
+    count = sum(f.lower().endswith(extensions) for f in files)
+
+    if count > 0:
+        print(f"{root}: {count} images")
