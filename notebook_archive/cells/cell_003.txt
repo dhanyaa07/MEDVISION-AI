@@ -1,0 +1,9 @@
+﻿path = "/content/archive.zip"
+
+with open(path, "rb") as f:
+    f.seek(-22, 2)
+    data = f.read(22)
+
+print("Last 22 bytes:", data)
+print("ZIP ending signature:", data[:4])
+
