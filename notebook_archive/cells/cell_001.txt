@@ -1,0 +1,14 @@
+﻿import os
+
+print("Files in Colab:")
+print(os.listdir("/content"))
+
+path = "/content/archive.zip"
+
+if os.path.exists(path):
+    print("\nFile size:", os.path.getsize(path), "bytes")
+
+    with open(path, "rb") as f:
+        print("File signature:", f.read(10))
+else:
+    print("archive.zip not found!")
