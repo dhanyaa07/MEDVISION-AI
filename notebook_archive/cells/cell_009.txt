@@ -1,0 +1,5 @@
+﻿for root, dirs, files in os.walk(EXTRACT_PATH):
+    level = root.replace(EXTRACT_PATH, '').count(os.sep)
+
+    if level <= 3:
+        print("    " * level + os.path.basename(root) + "/")
