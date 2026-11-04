@@ -1,0 +1,10 @@
+﻿base_model = tf.keras.applications.EfficientNetB0(
+    weights="imagenet",
+    include_top=False,
+    input_shape=(224, 224, 3)
+)
+
+base_model.trainable = False
+
+print("EfficientNetB0 loaded successfully!")
+print("Total layers:", len(base_model.layers))
