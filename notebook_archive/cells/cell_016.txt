@@ -1,0 +1,12 @@
+﻿images, labels = next(iter(train_ds))
+
+plt.figure(figsize=(12, 8))
+
+for i in range(8):
+    plt.subplot(2, 4, i + 1)
+    plt.imshow(images[i].numpy().astype("uint8"))
+    plt.title(CLASS_NAMES[labels[i].numpy()])
+    plt.axis("off")
+
+plt.tight_layout()
+plt.show()
