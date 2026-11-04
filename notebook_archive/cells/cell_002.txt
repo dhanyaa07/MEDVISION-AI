@@ -1,0 +1,10 @@
+﻿import zipfile
+
+path = "/content/archive.zip"
+
+with zipfile.ZipFile(path, 'r') as z:
+    print("Number of files:", len(z.namelist()))
+    print("ZIP integrity:", z.testzip())
+    print("\nFirst 20 files:")
+    for f in z.namelist()[:20]:
+        print(f)
