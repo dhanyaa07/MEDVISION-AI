@@ -1,0 +1,8 @@
+﻿with zipfile.ZipFile(ZIP_PATH, 'r') as z:
+    files = z.namelist()
+
+    print("Total files:", len(files))
+    print("\nFirst 25 entries:")
+
+    for f in files[:25]:
+        print(f)
