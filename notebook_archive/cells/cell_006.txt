@@ -1,0 +1,10 @@
+﻿import os
+
+ZIP_PATH = "/content/drive/MyDrive/archive.zip"
+
+if os.path.exists(ZIP_PATH):
+    size = os.path.getsize(ZIP_PATH) / (1024**3)
+    print("Dataset found!")
+    print("Dataset size:", round(size, 2), "GB")
+else:
+    print("Dataset not found. Check your Google Drive location.")
