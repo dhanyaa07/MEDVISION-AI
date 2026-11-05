@@ -1,0 +1,17 @@
+﻿from sklearn.metrics import confusion_matrix
+
+print("CLASS-WISE SENSITIVITY AND SPECIFICITY\n")
+
+for i, class_name in enumerate(CLASS_NAMES):
+
+    TP = cm[i, i]
+    FN = cm[i, :].sum() - TP
+    FP = cm[:, i].sum() - TP
+    TN = cm.sum() - (TP + FN + FP)
+
+    sensitivity = TP / (TP + FN) if TP + FN else 0
+    specificity = TN / (TN + FP) if TN + FP else 0
+
+    print(f"\n{class_name.upper()}")
+    print(f"Sensitivity: {sensitivity:.4f}")
+    print(f"Specificity: {specificity:.4f}")
