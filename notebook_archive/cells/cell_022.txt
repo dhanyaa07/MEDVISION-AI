@@ -1,0 +1,3 @@
+﻿model.save("/content/drive/MyDrive/MEDVISION_AI_stageA_best.keras")
+
+print("Stage A best model saved successfully!")
