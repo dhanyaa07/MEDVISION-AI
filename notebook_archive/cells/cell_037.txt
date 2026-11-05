@@ -1,0 +1,21 @@
+﻿import matplotlib.pyplot as plt
+from sklearn.metrics import ConfusionMatrixDisplay
+
+cm = confusion_matrix(
+    y_true,
+    y_pred,
+    labels=[0, 1, 2, 3]
+)
+
+plt.figure(figsize=(9, 7))
+
+disp = ConfusionMatrixDisplay(
+    confusion_matrix=cm,
+    display_labels=CLASS_NAMES
+)
+
+disp.plot(cmap="Blues", values_format="d")
+plt.title("MEDVISION AI - Confusion Matrix")
+plt.xticks(rotation=30)
+plt.tight_layout()
+plt.show()
