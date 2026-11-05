@@ -1,0 +1,13 @@
+﻿import zipfile
+
+EXTRACT_PATH = "/content/medvision_dataset"
+
+os.makedirs(EXTRACT_PATH, exist_ok=True)
+
+with zipfile.ZipFile(ZIP_PATH, 'r') as z:
+    bad_file = z.testzip()
+    if bad_file:
+        raise Exception(f"Corrupt archive: {bad_file}")
+    z.extractall(EXTRACT_PATH)
+
+print("Dataset restored!")
