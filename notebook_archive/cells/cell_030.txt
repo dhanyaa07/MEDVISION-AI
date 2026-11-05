@@ -1,0 +1,6 @@
+﻿model = tf.keras.models.load_model(
+    "/content/drive/MyDrive/MEDVISION_AI_stageA_best.keras"
+)
+
+print("MEDVISION AI restored successfully!")
+print("Model:", model.name)
