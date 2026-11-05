@@ -1,0 +1,7 @@
+﻿import os
+
+MODEL_PATH = "/content/drive/MyDrive/MEDVISION_AI_stageA_best.keras"
+ZIP_PATH = "/content/drive/MyDrive/archive.zip"
+
+print("Saved model exists:", os.path.exists(MODEL_PATH))
+print("Dataset exists:", os.path.exists(ZIP_PATH))
