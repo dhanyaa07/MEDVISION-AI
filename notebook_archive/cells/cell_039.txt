@@ -1,0 +1,23 @@
+﻿import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
+
+cm = confusion_matrix(y_true, y_pred)
+
+cm_normalized = cm.astype("float") / cm.sum(axis=1, keepdims=True)
+
+plt.figure(figsize=(9, 7))
+
+sns.heatmap(
+    cm_normalized,
+    annot=True,
+    fmt=".2%",
+    cmap="Blues",
+    xticklabels=CLASS_NAMES,
+    yticklabels=CLASS_NAMES
+)
+
+plt.xlabel("Predicted Class")
+plt.ylabel("Actual Class")
+plt.title("MEDVISION AI - Normalized Confusion Matrix")
+plt.show()
