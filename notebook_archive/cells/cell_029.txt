@@ -1,0 +1,71 @@
+﻿import pandas as pd
+import tensorflow as tf
+import numpy as np
+import os
+
+from sklearn.model_selection import train_test_split
+
+TRAIN_DIR = os.path.join(EXTRACT_PATH, "Training")
+TEST_DIR = os.path.join(EXTRACT_PATH, "Testing")
+
+CLASS_NAMES = ["glioma", "meningioma", "notumor", "pituitary"]
+
+IMG_SIZE = 224
+BATCH_SIZE = 32
+SEED = 42
+
+def collect_images(directory):
+    paths = []
+    labels = []
+
+    for label, class_name in enumerate(CLASS_NAMES):
+        folder = os.path.join(directory, class_name)
+
+        for file in sorted(os.listdir(folder)):
+            if file.lower().endswith((".jpg", ".jpeg", ".png")):
+                paths.append(os.path.join(folder, file))
+                labels.append(label)
+
+    return pd.DataFrame({"image": paths, "label": labels})
+
+train_df = collect_images(TRAIN_DIR)
+test_df = collect_images(TEST_DIR)
+
+train_df, val_df = train_test_split(
+    train_df,
+    test_size=0.20,
+    random_state=SEED,
+    stratify=train_df["label"]
+)
+
+AUTOTUNE = tf.data.AUTOTUNE
+
+def load_image(path, label):
+    image = tf.io.read_file(path)
+    image = tf.io.decode_image(
+        image, channels=3, expand_animations=False
+    )
+    image.set_shape([None, None, 3])
+    image = tf.image.resize(image, [IMG_SIZE, IMG_SIZE])
+    return image, label
+
+def create_dataset(df, training=False):
+    ds = tf.data.Dataset.from_tensor_slices(
+        (df["image"].values, df["label"].values)
+    )
+
+    if training:
+        ds = ds.shuffle(len(df), seed=SEED)
+
+    ds = ds.map(load_image, num_parallel_calls=AUTOTUNE)
+    ds = ds.batch(BATCH_SIZE).prefetch(AUTOTUNE)
+
+    return ds
+
+train_ds = create_dataset(train_df, True)
+val_ds = create_dataset(val_df)
+test_ds = create_dataset(test_df)
+
+print("Training:", len(train_df))
+print("Validation:", len(val_df))
+print("Testing:", len(test_df))
