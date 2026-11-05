@@ -1,0 +1,17 @@
+﻿errors = test_df.copy()
+
+errors["actual"] = [CLASS_NAMES[i] for i in y_true]
+errors["predicted"] = [CLASS_NAMES[i] for i in y_pred]
+errors["confidence"] = np.max(y_prob, axis=1)
+
+errors = errors[errors["actual"] != errors["predicted"]]
+
+print("Total incorrect predictions:", len(errors))
+
+print("\nMisclassification patterns:")
+
+print(
+    errors.groupby(["actual", "predicted"])
+    .size()
+    .sort_values(ascending=False)
+)
