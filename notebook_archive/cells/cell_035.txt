@@ -1,0 +1,18 @@
+﻿from sklearn.metrics import (
+    accuracy_score,
+    classification_report,
+    confusion_matrix,
+    roc_auc_score
+)
+
+y_true = np.concatenate([
+    labels.numpy() for images, labels in test_ds
+])
+
+y_prob = model.predict(test_ds)
+
+y_pred = np.argmax(y_prob, axis=1)
+
+print("Predictions completed!")
+print("Total test images:", len(y_true))
+print("Predicted images:", len(y_pred))
