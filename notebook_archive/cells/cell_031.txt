@@ -1,0 +1,23 @@
+﻿base_model = model.get_layer("efficientnetb0")
+
+base_model.trainable = True
+
+for layer in base_model.layers[:-30]:
+    layer.trainable = False
+
+for layer in base_model.layers:
+    if isinstance(layer, tf.keras.layers.BatchNormalization):
+        layer.trainable = False
+
+model.compile(
+    optimizer=tf.keras.optimizers.Adam(learning_rate=1e-5),
+    loss="sparse_categorical_crossentropy",
+    metrics=["accuracy"]
+)
+
+print("Trainable parameters:", sum(
+    tf.keras.backend.count_params(w)
+    for w in model.trainable_weights
+))
+
+print("Fine-tuning configuration completed!")
