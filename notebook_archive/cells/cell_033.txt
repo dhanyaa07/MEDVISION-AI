@@ -1,0 +1,6 @@
+﻿history2 = model.fit(
+    train_ds,
+    validation_data=val_ds,
+    epochs=8,
+    callbacks=fine_callbacks
+)
