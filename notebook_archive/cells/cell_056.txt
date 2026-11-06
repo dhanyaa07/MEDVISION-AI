@@ -1,0 +1,30 @@
+﻿normal_callbacks = [
+    tf.keras.callbacks.ModelCheckpoint(
+        "/content/drive/MyDrive/MEDVISION_AI_normalized.keras",
+        monitor="val_loss",
+        save_best_only=True,
+        verbose=1
+    ),
+
+    tf.keras.callbacks.EarlyStopping(
+        monitor="val_loss",
+        patience=3,
+        restore_best_weights=True,
+        verbose=1
+    ),
+
+    tf.keras.callbacks.ReduceLROnPlateau(
+        monitor="val_loss",
+        factor=0.2,
+        patience=2,
+        min_lr=1e-7,
+        verbose=1
+    )
+]
+
+history3 = model2.fit(
+    train_norm_ds,
+    validation_data=val_norm_ds,
+    epochs=8,
+    callbacks=normal_callbacks
+)
