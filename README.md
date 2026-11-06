@@ -147,3 +147,14 @@ No license is asserted for the MRI dataset or trained model. Check the original 
 ## Acknowledgements
 
 Built as an academic AI/ML project using TensorFlow/Keras, EfficientNetB0, OpenCV, Grad-CAM, ReportLab, and Gradio.
+
+## Repository checks
+
+Run lightweight repository checks without loading TensorFlow or the MRI dataset:
+
+```bash
+python scripts/validate_repository.py
+python -m unittest discover -s tests -v
+```
+
+These checks validate repository structure, source syntax, and selected training configuration contracts. They do not replace end-to-end testing with the authorized dataset and trained model. See `docs/testing.md`.
