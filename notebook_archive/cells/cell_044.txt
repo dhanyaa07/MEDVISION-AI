@@ -1,0 +1,69 @@
+﻿import tensorflow as tf
+import numpy as np
+import cv2
+import matplotlib.pyplot as plt
+
+base_model = model.get_layer("efficientnetb0")
+
+feature_model = tf.keras.Model(
+    inputs=base_model.input,
+    outputs=[
+        base_model.get_layer("top_conv").output,
+        base_model.output
+    ]
+)
+
+augmentation = model.get_layer("sequential")
+pooling = model.get_layer("global_average_pooling2d")
+dropout1 = model.get_layer("dropout")
+dense1 = model.get_layer("dense")
+dropout2 = model.get_layer("dropout_1")
+classifier = model.get_layer("dense_1")
+
+
+def make_gradcam(image):
+
+    image = tf.convert_to_tensor(image, dtype=tf.float32)
+
+    with tf.GradientTape() as tape:
+
+        augmented = augmentation(image, training=False)
+
+        conv_output, features = feature_model(
+            augmented, training=False
+        )
+
+        x = pooling(features)
+        x = dropout1(x, training=False)
+        x = dense1(x)
+        x = dropout2(x, training=False)
+
+        predictions = classifier(x)
+
+        class_index = tf.argmax(predictions[0])
+        loss = predictions[:, class_index]
+
+    grads = tape.gradient(loss, conv_output)
+
+    weights = tf.reduce_mean(grads, axis=(0, 1, 2))
+
+    conv_output = conv_output[0]
+
+    heatmap = tf.reduce_sum(
+        conv_output * weights,
+        axis=-1
+    )
+
+    heatmap = tf.maximum(heatmap, 0)
+
+    heatmap = heatmap / (
+        tf.reduce_max(heatmap) + 1e-8
+    )
+
+    return (
+        heatmap.numpy(),
+        int(class_index.numpy()),
+        predictions.numpy()[0]
+    )
+
+print("Grad-CAM initialized successfully!")
