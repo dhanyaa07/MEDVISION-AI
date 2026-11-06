@@ -1,0 +1,9 @@
+﻿baseline = tf.keras.models.load_model(
+    "/content/drive/MyDrive/MEDVISION_AI_best_finetuned.keras"
+)
+
+normalized = tf.keras.models.load_model(
+    "/content/drive/MyDrive/MEDVISION_AI_normalized.keras"
+)
+
+print("Both models loaded successfully!")
