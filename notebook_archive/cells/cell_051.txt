@@ -1,0 +1,19 @@
+﻿def normalize_mri(image, label):
+    image = tf.image.rgb_to_grayscale(image)
+
+    flat = tf.reshape(image, [-1])
+    sorted_pixels = tf.sort(flat)
+
+    n = tf.size(sorted_pixels)
+
+    low = tf.gather(sorted_pixels, tf.cast(0.01 * tf.cast(n - 1, tf.float32), tf.int32))
+    high = tf.gather(sorted_pixels, tf.cast(0.99 * tf.cast(n - 1, tf.float32), tf.int32))
+
+    image = tf.clip_by_value(image, low, high)
+
+    image = (image - low) / (high - low + 1e-7)
+    image = image * 255.0
+
+    image = tf.image.grayscale_to_rgb(image)
+
+    return image, label
