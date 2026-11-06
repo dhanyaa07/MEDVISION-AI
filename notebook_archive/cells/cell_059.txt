@@ -1,0 +1,11 @@
+﻿y_val = np.concatenate([
+    labels.numpy() for images, labels in val_ds
+])
+
+baseline_prob = baseline.predict(val_ds)
+normalized_prob = normalized.predict(val_norm_ds)
+
+baseline_pred = np.argmax(baseline_prob, axis=1)
+normalized_pred = np.argmax(normalized_prob, axis=1)
+
+print("Validation predictions completed!")
