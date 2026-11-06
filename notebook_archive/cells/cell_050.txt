@@ -1,0 +1,27 @@
+﻿from PIL import Image
+import numpy as np
+import os
+
+for class_name in CLASS_NAMES:
+
+    folder = os.path.join(TRAIN_DIR, class_name)
+
+    brightness = []
+    contrast = []
+
+    for file in os.listdir(folder):
+
+        if file.lower().endswith((".jpg", ".jpeg", ".png")):
+
+            img = Image.open(
+                os.path.join(folder, file)
+            ).convert("L")
+
+            arr = np.array(img)
+
+            brightness.append(arr.mean())
+            contrast.append(arr.std())
+
+    print("\n", class_name.upper())
+    print("Average brightness:", round(np.mean(brightness), 2))
+    print("Average contrast:", round(np.mean(contrast), 2))
