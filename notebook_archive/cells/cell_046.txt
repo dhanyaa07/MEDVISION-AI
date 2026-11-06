@@ -1,0 +1,21 @@
+﻿correct = test_df.copy()
+correct["actual"] = [CLASS_NAMES[i] for i in y_true]
+correct["predicted"] = [CLASS_NAMES[i] for i in y_pred]
+correct["confidence"] = np.max(y_prob, axis=1)
+
+correct = correct[correct["actual"] == correct["predicted"]]
+
+wrong = errors[
+    (errors["actual"] == "meningioma") &
+    (errors["predicted"] == "pituitary")
+]
+
+correct_samples = correct[
+    correct["actual"] == "meningioma"
+].sample(2, random_state=42)
+
+wrong_samples = wrong.sample(2, random_state=42)
+
+comparison = pd.concat([correct_samples, wrong_samples])
+
+print(comparison[["actual", "predicted", "confidence"]])
