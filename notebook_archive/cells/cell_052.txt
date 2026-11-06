@@ -1,0 +1,31 @@
+﻿def create_normalized_dataset(df, training=False):
+    ds = tf.data.Dataset.from_tensor_slices(
+        (df["image"].values, df["label"].values)
+    )
+
+    if training:
+        ds = ds.shuffle(
+            len(df),
+            seed=SEED
+        )
+
+    ds = ds.map(
+        load_image,
+        num_parallel_calls=AUTOTUNE
+    )
+
+    ds = ds.map(
+        normalize_mri,
+        num_parallel_calls=AUTOTUNE
+    )
+
+    ds = ds.batch(BATCH_SIZE).prefetch(AUTOTUNE)
+
+    return ds
+
+
+train_norm_ds = create_normalized_dataset(train_df, True)
+val_norm_ds = create_normalized_dataset(val_df)
+test_norm_ds = create_normalized_dataset(test_df)
+
+print("Normalized datasets created!")
