@@ -1,0 +1,33 @@
+﻿import matplotlib.pyplot as plt
+import tensorflow as tf
+import os
+import random
+
+fig, axes = plt.subplots(4, 4, figsize=(12, 12))
+
+for i, class_name in enumerate(CLASS_NAMES):
+
+    folder = os.path.join(TRAIN_DIR, class_name)
+
+    samples = random.sample(
+        [
+            f for f in os.listdir(folder)
+            if f.lower().endswith((".jpg", ".jpeg", ".png"))
+        ],
+        4
+    )
+
+    for j, file in enumerate(samples):
+
+        img = tf.keras.utils.load_img(
+            os.path.join(folder, file),
+            target_size=(224, 224)
+        )
+
+        axes[i, j].imshow(img)
+        axes[i, j].set_title(class_name.upper())
+        axes[i, j].axis("off")
+
+plt.tight_layout()
+plt.savefig("/content/medvision_dataset_samples.png", dpi=200)
+plt.show()
