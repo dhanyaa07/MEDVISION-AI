@@ -1,0 +1,37 @@
+﻿from PIL import Image
+from collections import defaultdict
+import os
+import numpy as np
+
+stats = defaultdict(list)
+
+for class_name in CLASS_NAMES:
+
+    folder = os.path.join(TRAIN_DIR, class_name)
+
+    for file in os.listdir(folder):
+
+        if file.lower().endswith((".jpg", ".jpeg", ".png")):
+
+            with Image.open(os.path.join(folder, file)) as img:
+
+                w, h = img.size
+
+                stats[class_name].append({
+                    "width": w,
+                    "height": h,
+                    "ratio": w / h,
+                    "mode": img.mode
+                })
+
+for class_name, values in stats.items():
+
+    widths = [x["width"] for x in values]
+    heights = [x["height"] for x in values]
+    ratios = [x["ratio"] for x in values]
+
+    print("\n", class_name.upper())
+    print("Images:", len(values))
+    print("Width range:", min(widths), "-", max(widths))
+    print("Height range:", min(heights), "-", max(heights))
+    print("Average aspect ratio:", round(np.mean(ratios), 3))
