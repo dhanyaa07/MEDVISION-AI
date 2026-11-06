@@ -1,0 +1,21 @@
+﻿print("BASELINE - ORIGINAL IMAGES")
+
+original_results = model.evaluate(
+    val_ds,
+    return_dict=True
+)
+
+print("\nBASELINE - NORMALIZED IMAGES")
+
+normalized_results = model.evaluate(
+    val_norm_ds,
+    return_dict=True
+)
+
+print("\nCOMPARISON")
+
+print("Original accuracy:", original_results["accuracy"])
+print("Normalized accuracy:", normalized_results["accuracy"])
+
+print("Original loss:", original_results["loss"])
+print("Normalized loss:", normalized_results["loss"])
