@@ -1,0 +1,34 @@
+﻿import tensorflow as tf
+import numpy as np
+import cv2
+import matplotlib.pyplot as plt
+
+def make_gradcam(image, model, last_conv_layer="top_conv"):
+    grad_model = tf.keras.models.Model(
+        model.inputs,
+        [
+            model.get_layer("efficientnetb0").get_layer(last_conv_layer).output,
+            model.output
+        ]
+    )
+
+    with tf.GradientTape() as tape:
+        conv_output, predictions = grad_model(image)
+        class_index = tf.argmax(predictions[0])
+        loss = predictions[:, class_index]
+
+    grads = tape.gradient(loss, conv_output)
+
+    weights = tf.reduce_mean(grads, axis=(0, 1, 2))
+
+    conv_output = conv_output[0]
+
+    heatmap = tf.reduce_sum(
+        conv_output * weights,
+        axis=-1
+    )
+
+    heatmap = tf.maximum(heatmap, 0)
+    heatmap /= tf.reduce_max(heatmap) + 1e-8
+
+    return heatmap.numpy(), int(class_index.numpy()), predictions.numpy()[0]
