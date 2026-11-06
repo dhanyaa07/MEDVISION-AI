@@ -1,0 +1,57 @@
+﻿from PIL import Image
+
+plt.figure(figsize=(15, 16))
+
+for i, (_, row) in enumerate(error_samples.iterrows()):
+
+    img = tf.keras.utils.load_img(
+        row["image"],
+        target_size=(224, 224)
+    )
+
+    img_array = tf.keras.utils.img_to_array(img)
+
+    input_image = np.expand_dims(
+        img_array, axis=0
+    )
+
+    heatmap, predicted_class, probabilities = make_gradcam(
+        input_image
+    )
+
+    heatmap = cv2.resize(heatmap, (224, 224))
+
+    heatmap_color = cv2.applyColorMap(
+        np.uint8(255 * heatmap),
+        cv2.COLORMAP_JET
+    )
+
+    heatmap_color = cv2.cvtColor(
+        heatmap_color,
+        cv2.COLOR_BGR2RGB
+    )
+
+    overlay = cv2.addWeighted(
+        img_array.astype("uint8"), 0.6,
+        heatmap_color, 0.4, 0
+    )
+
+    plt.subplot(4, 3, i * 3 + 1)
+    plt.imshow(img_array.astype("uint8"))
+    plt.title("Original MRI")
+    plt.axis("off")
+
+    plt.subplot(4, 3, i * 3 + 2)
+    plt.imshow(heatmap, cmap="jet")
+    plt.title("Grad-CAM Heatmap")
+    plt.axis("off")
+
+    plt.subplot(4, 3, i * 3 + 3)
+    plt.imshow(overlay)
+    plt.title(
+        f"Predicted: {CLASS_NAMES[predicted_class]}"
+    )
+    plt.axis("off")
+
+plt.tight_layout()
+plt.show()
