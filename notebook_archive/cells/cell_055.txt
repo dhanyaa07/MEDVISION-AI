@@ -1,0 +1,22 @@
+﻿model2 = tf.keras.models.load_model(
+    "/content/drive/MyDrive/MEDVISION_AI_best_finetuned.keras"
+)
+
+base_model2 = model2.get_layer("efficientnetb0")
+
+base_model2.trainable = True
+
+for layer in base_model2.layers[:-30]:
+    layer.trainable = False
+
+for layer in base_model2.layers:
+    if isinstance(layer, tf.keras.layers.BatchNormalization):
+        layer.trainable = False
+
+model2.compile(
+    optimizer=tf.keras.optimizers.Adam(learning_rate=2e-6),
+    loss="sparse_categorical_crossentropy",
+    metrics=["accuracy"]
+)
+
+print("Normalized experiment initialized!")
