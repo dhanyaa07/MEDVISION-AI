@@ -1,0 +1,56 @@
+﻿from sklearn.metrics import (
+    classification_report,
+    confusion_matrix,
+    accuracy_score,
+    balanced_accuracy_score
+)
+
+def evaluate_model(name, y_true, predictions):
+
+    cm = confusion_matrix(
+        y_true,
+        predictions,
+        labels=[0, 1, 2, 3]
+    )
+
+    print("\n", name)
+    print(classification_report(
+        y_true,
+        predictions,
+        target_names=CLASS_NAMES,
+        digits=4
+    ))
+
+    print("Accuracy:", accuracy_score(y_true, predictions))
+    print("Balanced accuracy:", balanced_accuracy_score(y_true, predictions))
+
+    for i, class_name in enumerate(CLASS_NAMES):
+
+        TP = cm[i, i]
+        FN = cm[i, :].sum() - TP
+        FP = cm[:, i].sum() - TP
+        TN = cm.sum() - TP - FN - FP
+
+        sensitivity = TP / (TP + FN)
+        specificity = TN / (TN + FP)
+
+        print(
+            f"{class_name}: "
+            f"Sensitivity={sensitivity:.4f}, "
+            f"Specificity={specificity:.4f}"
+        )
+
+    return cm
+
+
+baseline_cm = evaluate_model(
+    "ORIGINAL MODEL",
+    y_val,
+    baseline_pred
+)
+
+normalized_cm = evaluate_model(
+    "NORMALIZED MODEL",
+    y_val,
+    normalized_pred
+)
